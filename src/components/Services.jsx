@@ -54,12 +54,13 @@ const stripHtml = (html) => {
 };
 
 function ServiceCard({ service }) {
-  const imageUrl =
-    service._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    "https://placehold.co/500x300";
   const excerpt = service.excerpt?.rendered
     ? stripHtml(service.excerpt.rendered)
     : "";
+  const tempContainer = document.createElement("div");
+  tempContainer.innerHTML = service.content.rendered;
+  const firstImage = tempContainer.querySelector("img");
+  const imageUrl = firstImage ? firstImage.src : null;
 
   return (
     <Card>
@@ -70,16 +71,18 @@ function ServiceCard({ service }) {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2 text-slate-800">
-          {service.title?.rendered || "Service Title"}
-        </h3>
-        <p className="text-gray-700 mb-4">{excerpt}</p>
+      <div className="p-6 relative h-full flex flex-col justify-between">
+        <div>
+          <h3 className="text-xl font-semibold mb-2 text-slate-800">
+            {service.title?.rendered || "Service Title"}
+          </h3>
+          <p className="text-gray-700 mb-4">{excerpt}</p>
+        </div>
         <ButtonOutline
           onClick={() => {
             window.location.href = service.link;
           }}
-          className="w-full bg-rose-600 cursor-pointer hover:bg-rose-700"
+          className="w-full bg-rose-600 cursor-pointer hover:bg-rose-700 "
         >
           Leer más
         </ButtonOutline>

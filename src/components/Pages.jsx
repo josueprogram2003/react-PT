@@ -41,13 +41,13 @@ const stripHtml = (html) => {
 };
 
 function PagesCard({ pages }) {
-  const imageUrl =
-    pages._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    "https://placehold.co/500x300";
   const excerpt = pages.excerpt?.rendered
     ? stripHtml(pages.excerpt.rendered)
     : "";
-
+  const tempContainer = document.createElement("div");
+  tempContainer.innerHTML = pages.content.rendered;
+  const firstImage = tempContainer.querySelector("img");
+  const imageUrl = firstImage ? firstImage.src : null;
   return (
     <Card>
       <div className="relative h-48 w-full">
